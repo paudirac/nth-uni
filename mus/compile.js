@@ -10,6 +10,9 @@ var endTime = function(time, expr) {
     else if (expr.tag === 'par') {
 	return time + max(endTime(0, expr.left), endTime(0, expr.right));
     }
+    else if (expr.tag === 'rest') {
+	return time + expr.duration;
+    }
     else if (expr.tag === 'seq') {
 	return time + endTime(0, expr.left) + endTime(0, expr.right);
     }
@@ -78,3 +81,18 @@ console.log(c_chord);
 console.log(compile(c_chord));
 console.log(melody);
 console.log(compile(melody));
+
+var melody_with_rests = {
+    tag: 'seq',
+    left: { tag: 'note', pitch: 'c4', dur: 250 },
+    right: {
+	tag: 'seq',
+	left: { tag: 'rest', duration: 250 },
+	right: { tag: 'note', pitch: 'e4', dur: 250 }
+    }
+};
+
+console.log(melody_with_rests);
+console.log(endTime(0, melody_with_rests));
+
+// console.log(compile(melody_with_rests));

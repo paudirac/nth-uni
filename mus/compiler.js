@@ -18,7 +18,6 @@ var endTime = function(time, expr) {
     }
 };
 
-var note_re = /([abcdefg])([0-8])/;
 var pitch_of = {
     c: 0,
     'c#': 1,
@@ -42,6 +41,7 @@ var pitch_of = {
     'b#': 0,
     'cb': 11
 };
+var note_re = /([abcdefg]|[abcdefg]#|[abcdefg]b)([0-8])/;
 var midi_pitch = function(pitch) {
     var match = note_re.exec(pitch);
     var letter = match[1];
@@ -122,7 +122,7 @@ var melody_with_rests = {
     right: {
 	tag: 'seq',
 	left: { tag: 'rest', duration: 250 },
-	right: { tag: 'note', pitch: 'e4', dur: 250 }
+	right: { tag: 'note', pitch: 'eb4', dur: 250 }
     }
 };
 

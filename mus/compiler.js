@@ -52,7 +52,7 @@ var midi_pitch = function(pitch) {
 var singlenote = function(musexpr, start) {
     return {
 	tag: 'note',
-	pitch: musexpr.pitch,
+	pitch: midi_pitch(musexpr.pitch),
 	start: start,
 	dur: musexpr.dur
     };

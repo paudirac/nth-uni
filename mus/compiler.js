@@ -18,6 +18,36 @@ var endTime = function(time, expr) {
     }
 };
 
+var note_re = /([abcdefg])([0-8])/;
+var pitch_of = {
+    c: 0,
+    'c#': 1,
+    'db': 1,
+    d: 2,
+    'd#': 3,
+    'eb': 3,
+    e: 4,
+    'e#': 5,
+    'fb': 4,
+    f: 5,
+    'f#': 6,
+    'gb': 6,
+    g: 7,
+    'g#': 8,
+    'ab': 8,
+    a: 9,
+    'a#': 10,
+    'bb': 10,
+    b: 11,
+    'b#': 0,
+    'cb': 11
+};
+var midi_pitch = function(pitch) {
+    var match = note_re.exec(pitch);
+    var letter = match[1];
+    var octave = match[2];
+    return 12 + octave * 12 + pitch_of[letter];
+};
 
 var singlenote = function(musexpr, start) {
     return {
@@ -100,3 +130,9 @@ console.log("melody with rests");
 console.log(melody_with_rests);
 console.log(endTime(0, melody_with_rests));
 console.log(compile(melody_with_rests));
+
+console.log((function(note) { return note + ": " + midi_pitch(note); })("a0"));
+console.log((function(note) { return note + ": " + midi_pitch(note); })("a4"));
+console.log((function(note) { return note + ": " + midi_pitch(note); })("c4"));
+console.log((function(note) { return note + ": " + midi_pitch(note); })("e4"));
+

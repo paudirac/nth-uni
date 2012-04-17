@@ -28,17 +28,15 @@ var singlenote = function(musexpr, start) {
     };
 };
 
+var isEmpty = function(el) { return el.length === 0; }
+
 var cons = function(el, list) {
-    if (el.length) { return el.concat(list); }
-    else { return [el].concat(list); }
+    return el.concat(list);
 };
 
 var _compile = function(musexpr, start) {
     if (musexpr.tag === 'note') {	
-	return cons(
-	    singlenote(musexpr, start),
-	    []
-	);
+	return [singlenote(musexpr, start)];
     }
     else if (musexpr.tag == 'par') {
 	var par_duration = endTime(musexpr);
@@ -46,6 +44,10 @@ var _compile = function(musexpr, start) {
 	    _compile(musexpr.left, start),
 	    _compile(musexpr.right, start)
 	);
+    }
+    else if (musexpr.tag === 'rest') {
+	start = start + endTime(musexpr);
+	return [];
     }
     else if (musexpr.tag == 'seq') {
 	var start_right = endTime(start, musexpr.left);
@@ -77,8 +79,10 @@ var melody = {
     right: { tag: 'note', pitch: 'g4', dur: 450 }
 };
 
+console.log("chord");
 console.log(c_chord);
-console.log(compile(c_chord));
+ console.log(compile(c_chord));
+console.log("melody");
 console.log(melody);
 console.log(compile(melody));
 
@@ -92,7 +96,7 @@ var melody_with_rests = {
     }
 };
 
+console.log("melody with rests");
 console.log(melody_with_rests);
 console.log(endTime(0, melody_with_rests));
-
-// console.log(compile(melody_with_rests));
+console.log(compile(melody_with_rests));

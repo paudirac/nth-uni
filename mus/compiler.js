@@ -79,11 +79,26 @@ var _compile = function(musexpr, start) {
 	start = start + endTime(musexpr);
 	return [];
     }
-    else if (musexpr.tag == 'seq') {
+    else if (musexpr.tag === 'seq') {
 	var start_right = endTime(start, musexpr.left);
 	return cons(
 	    _compile(musexpr.left, start),
 	    _compile(musexpr.right, start_right)
+	);
+    }
+    else if (musexpr.tag === 'repeat') {
+	return _repeat(musexpr.section, start, musexpr.count);
+    }
+};
+
+var _repeat = function(musexpr, start, count) {
+    if (count === 1) { return _compile(musexpr, start); }
+    else { 
+	// maybe it isn't the most efficient way, but its coherent
+	var start_remaining = endTime(start, musexpr);
+	return cons(
+	    _compile(musexpr, start),
+	    _repeat(musexpr, start_remaining, count - 1)
 	);
     }
 };
@@ -118,11 +133,11 @@ console.log(compile(melody));
 
 var melody_with_rests = {
     tag: 'seq',
-    left: { tag: 'note', pitch: 'c4', dur: 250 },
+    left: { tag: 'note', pitch: 'c4', dur: 50 },
     right: {
 	tag: 'seq',
-	left: { tag: 'rest', duration: 250 },
-	right: { tag: 'note', pitch: 'eb4', dur: 250 }
+	left: { tag: 'rest', duration: 100 },
+	right: { tag: 'note', pitch: 'eb4', dur: 200 }
     }
 };
 
@@ -136,3 +151,20 @@ console.log((function(note) { return note + ": " + midi_pitch(note); })("a4"));
 console.log((function(note) { return note + ": " + midi_pitch(note); })("c4"));
 console.log((function(note) { return note + ": " + midi_pitch(note); })("e4"));
 
+var repeat = {
+    tag: 'repeat',
+    section: { tag: 'note', pitch: 'c4', dur: 250 },
+    count: 3
+};
+console.log("repeat");
+console.log(repeat);
+console.log(compile(repeat));
+
+var repeat_melody = {
+    tag: 'repeat',
+    section: melody_with_rests,
+    count: 2
+};
+console.log("repeat_melody");
+console.log(repeat_melody);
+console.log(compile(repeat_melody));

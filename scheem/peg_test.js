@@ -17,16 +17,21 @@ console.log(data);
 // Create my parser
 var parse = wrapExceptions(PEG.buildParser(data).parse);
 
-
-function assert_eq(left, right, msg) {
-    var pass = assert.deepEqual(left, right);
-    var type = pass ? "PASSED" : "FAILED";
-    console.log(type + ": " + msg);
+// Nodeunit tests
+exports['dog'] = function(test) {
+    test.deepEqual(parse("dog"), ["dog"]);
+    test.done();
 };
-
-// Do a test 
-assert_eq(parse("dog"), ["dog"], 'passed dog');
-assert_eq(parse("black dog"), ["black", "dog"], 'passed black dog');
-assert_eq(parse("angry black dog"), ["angry", "black", "dog"], 'passed angry black dog');
-assert_eq(parse("Gray dog"), 1, 'not passed Gray dog');
+exports["black dog"] = function(test) {
+    test.deepEqual(parse("black dog"), ["black", "dog"]);
+    test.done();
+};
+exports["angry black dog"] = function(test) {
+    test.deepEqual(parse("angry black dog"), ["angry", "black", "dog"]);
+    test.done();
+};
+exports["Gray dog"] = function(test) {
+    test.notDeepEqual(parse("Gray dog"), ["Gray", "dog"]);
+    test.done();
+};
 

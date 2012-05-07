@@ -1,0 +1,14 @@
+start =
+  wordlist
+
+wordlist =
+  first:word rest:spaceword*
+    { return [first].concat(rest); }
+
+word =
+  chars:[a-z]+
+    { return chars.join(""); }
+
+spaceword =
+  space:" " word:word
+    { return word; }

@@ -53,6 +53,13 @@ assert(parse("(+ 1 (f x 3 y))"), ["+", "1", ["f", "x", "3","y"]]);
 
 // add extra whitespace
 assert(parse("(atom  other    atom)"), ["atom", "other", "atom"]);
+assert(parse("( atom  other    atom)"), ["atom", "other", "atom"]);
+assert(parse("( atom  other (atom))"), ["atom", "other", ["atom"]]);
+assert(parse("( atom  other (    atom other))"), ["atom", "other", ["atom", "other"]]);
+assert(parse("( atom  other    atom )"), ["atom", "other", "atom"]);
+assert(parse("( atom  other (    atom other ))"), ["atom", "other", ["atom", "other"]]);
+assert(parse("( atom  other (    atom other ) )"), ["atom", "other", ["atom", "other"]]);
+
 
 
 //assert(parse("((atom turkey) or)"), [["atom", "turkey"], "or"]);

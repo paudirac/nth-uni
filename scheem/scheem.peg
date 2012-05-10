@@ -11,8 +11,14 @@ atom =
 spaceexpression =
     " "+ exp:expression { return exp; }
 
+leftparen =
+    "(" " "*
+
+rightparen =
+    " "* ")"
+
 expression =
     atom
-    / "(" first:atom rest:spaceexpression* ")"
+    / leftparen first:atom rest:spaceexpression* rightparen
       { return [first].concat(rest); }
 

@@ -8,14 +8,17 @@ atom =
     chars:validchar+
       { return chars.join(""); }
 
+whitespace =
+    " "
+
 spaceexpression =
-    " "+ exp:expression { return exp; }
+    whitespace+ exp:expression { return exp; }
 
 leftparen =
-    "(" " "*
+    "(" whitespace*
 
 rightparen =
-    " "* ")"
+    whitespace* ")"
 
 expression =
     atom

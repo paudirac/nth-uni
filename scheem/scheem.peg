@@ -10,6 +10,9 @@ atom =
 
 whitespace =
     " "
+   /"\t"
+   /"\n"
+   /"\r\n"
 
 spaceexpression =
     whitespace+ exp:expression { return exp; }

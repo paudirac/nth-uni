@@ -60,6 +60,12 @@ assert(parse("( atom  other    atom )"), ["atom", "other", "atom"]);
 assert(parse("( atom  other (    atom other ))"), ["atom", "other", ["atom", "other"]]);
 assert(parse("( atom  other (    atom other ) )"), ["atom", "other", ["atom", "other"]]);
 
+// add tabs and newlines
+assert(parse("(atom  \tother    atom)"), ["atom", "other", "atom"]);
+assert(parse("(atom  \nother    atom)"), ["atom", "other", "atom"]);
+assert(parse("(atom  \r\nother    atom)"), ["atom", "other", "atom"]);
+
+
 
 
 //assert(parse("((atom turkey) or)"), [["atom", "turkey"], "or"]);

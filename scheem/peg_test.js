@@ -46,5 +46,8 @@ assert(parse("*abc$"), "*abc$");
 assert(parse("+"), "+");
 assert(parse("(+ x 3)"), ["+", "x", "3"]);
 assert(parse("(atom)"), ["atom"]);
+assert(parse("(atom turkey or)"), ["atom", "turkey", "or"]);
+assert(parse("(+ 1 (f x 3 y))"), ["+", "1", ["f", "x", "3","y"]]);
+//assert(parse("((atom turkey) or)"), [["atom", "turkey"], "or"]);
 
 

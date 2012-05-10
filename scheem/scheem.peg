@@ -9,7 +9,7 @@ atom =
       { return chars.join(""); }
 
 spaceexpression =
-    " " exp:expression { return exp; }
+    " "+ exp:expression { return exp; }
 
 expression =
     atom

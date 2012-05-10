@@ -38,6 +38,8 @@ var assert = function (obtained, expected) {
 //     test.deepEqual(parse("atom"), "atom");
 //     test.done();
 // };
+
+// atoms and lists of expressions
 assert(parse("atom"), "atom");
 assert(parse("turkey"), "turkey");
 assert(parse("1492"), "1492");
@@ -48,6 +50,11 @@ assert(parse("(+ x 3)"), ["+", "x", "3"]);
 assert(parse("(atom)"), ["atom"]);
 assert(parse("(atom turkey or)"), ["atom", "turkey", "or"]);
 assert(parse("(+ 1 (f x 3 y))"), ["+", "1", ["f", "x", "3","y"]]);
+
+// add extra whitespace
+assert(parse("(atom  other    atom)"), ["atom", "other", "atom"]);
+
+
 //assert(parse("((atom turkey) or)"), [["atom", "turkey"], "or"]);
 
 

@@ -1,14 +1,18 @@
 start =
-  wordlist
+    expression
 
-wordlist =
-  first:word rest:spaceword*
-    { return [first].concat(rest); }
+validchar =
+    [0-9a-zA-Z_?!+\-=@#$%^&*/.]
 
-word =
-  chars:[a-z]+
-    { return chars.join(""); }
+atom =
+    chars:validchar+
+      { return chars.join(""); }
 
-spaceword =
-  space:" " word:word
-    { return word; }
+spaceexpression =
+    " " exp:expression { return exp; }
+
+expression =
+    atom
+    / "(" first:atom rest:spaceexpression* ")"
+      { return [first].concat(rest); }
+

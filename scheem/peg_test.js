@@ -22,10 +22,11 @@ var parse = wrapExceptions(PEG.buildParser(data).parse);
 
 // Nodeunit tests
 var count = 0;
-var assert = function (obtained, expected) {
+var assert = function (obtained, expected,name) {
     count++;
     var test_name = count.toString();
-    try { test_name = expected.toString() } catch(e) { }
+    if (name) test_name = name;
+    //try { test_name = expected.toString() } catch(e) { }
     exports[test_name] = function(test) {
 	console.log("obt: " + obtained);
 	test.deepEqual(obtained, expected);
@@ -59,6 +60,15 @@ assert(parse("( atom  other (    atom other))"), ["atom", "other", ["atom", "oth
 assert(parse("( atom  other    atom )"), ["atom", "other", "atom"]);
 assert(parse("( atom  other (    atom other ))"), ["atom", "other", ["atom", "other"]]);
 assert(parse("( atom  other (    atom other ) )"), ["atom", "other", ["atom", "other"]]);
+assert(parse("( atom   (\n atom   ) )"), ["atom", ["atom"]]);
+
+assert(parse(" atom"), "atom", 'p1');
+assert(parse(" \tatom"), "atom", 'p2');
+assert(parse(" (atom)"), ["atom"], 'p3');
+assert(parse(" (  atom ) "), ["atom"], 'p4');
+assert(parse(" ( a  b     c d)"), ["a", "b", "c", "d"], 'p5');
+
+
 
 // add tabs and newlines
 assert(parse("(atom  \tother    atom)"), ["atom", "other", "atom"]);

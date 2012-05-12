@@ -75,9 +75,11 @@ assert(parse("(atom  \tother    atom)"), ["atom", "other", "atom"]);
 assert(parse("(atom  \nother    atom)"), ["atom", "other", "atom"]);
 assert(parse("(atom  \r\nother    atom)"), ["atom", "other", "atom"]);
 
-
-
-
+// TODO: general S-expr
 //assert(parse("((atom turkey) or)"), [["atom", "turkey"], "or"]);
 
-
+// quote
+assert(parse("(quote something)"), ["quote", "something"]);
+assert(parse(" ( quote something)"), ["quote", "something"]);
+assert(parse("`(something else)"), ["quote", ["something", "else"]]);
+assert(parse("`( something else)"), ["quote", [ "something", "else"]]);

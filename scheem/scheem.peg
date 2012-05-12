@@ -30,6 +30,8 @@ rightparen =
 parenthisedexpr =
     leftparen first:atom rest:spaceexpression* rightparen
       { return [first].concat(rest); }
+    / "`" leftparen first:atom rest:spaceexpression* rightparen
+      { return ["quote", [first].concat(rest)]; }
 
 spaceparenthisedexpr =
     whitespace* p:parenthisedexpr whitespace*

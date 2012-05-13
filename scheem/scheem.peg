@@ -1,5 +1,9 @@
 start =
-    expression
+    exp:expression ";;"* anychar* { return exp; }
+    / expression
+
+anychar =
+    [0-9a-zA-Z_?!+\-=@#$%^&*/.\(\)]
 
 validchar =
     [0-9a-zA-Z_?!+\-=@#$%^&*/.]

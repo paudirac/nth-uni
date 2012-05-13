@@ -21,14 +21,10 @@ console.log(data);
 var parse = wrapExceptions(PEG.buildParser(data).parse);
 
 // Nodeunit tests
-var count = 0;
-var assert = function (obtained, expected,name) {
-    count++;
-    var test_name = count.toString();
-    if (name) test_name = name;
-    //try { test_name = expected.toString() } catch(e) { }
-    exports[test_name] = function(test) {
-	console.log("obt: " + obtained);
+var assert_parse = function (input, expected, name) {
+    if (!name) { name = input; }
+    exports[name] = function(test) {
+	var obtained = parse(input);
 	test.deepEqual(obtained, expected);
 	test.done();
     };
@@ -41,45 +37,53 @@ var assert = function (obtained, expected,name) {
 // };
 
 // atoms and lists of expressions
-assert(parse("atom"), "atom");
-assert(parse("turkey"), "turkey");
-assert(parse("1492"), "1492");
-assert(parse("u"), "u");
-assert(parse("*abc$"), "*abc$");
-assert(parse("+"), "+");
-assert(parse("(+ x 3)"), ["+", "x", "3"]);
-assert(parse("(atom)"), ["atom"]);
-assert(parse("(atom turkey or)"), ["atom", "turkey", "or"]);
-assert(parse("(+ 1 (f x 3 y))"), ["+", "1", ["f", "x", "3","y"]]);
+assert_parse("atom", "atom");
+assert_parse("turkey", "turkey");
+assert_parse("1492", "1492");
+assert_parse("u", "u");
+assert_parse("*abc$", "*abc$");
+assert_parse("+", "+");
+assert_parse("(+ x 3)", ["+", "x", "3"]);
+assert_parse("(atom)", ["atom"]);
+assert_parse("(atom turkey or)", ["atom", "turkey", "or"]);
+assert_parse("(+ 1 (f x 3 y))", ["+", "1", ["f", "x", "3","y"]]);
 
 // add extra whitespace
-assert(parse("(atom  other    atom)"), ["atom", "other", "atom"]);
-assert(parse("( atom  other    atom)"), ["atom", "other", "atom"]);
-assert(parse("( atom  other (atom))"), ["atom", "other", ["atom"]]);
-assert(parse("( atom  other (    atom other))"), ["atom", "other", ["atom", "other"]]);
-assert(parse("( atom  other    atom )"), ["atom", "other", "atom"]);
-assert(parse("( atom  other (    atom other ))"), ["atom", "other", ["atom", "other"]]);
-assert(parse("( atom  other (    atom other ) )"), ["atom", "other", ["atom", "other"]]);
-assert(parse("( atom   (\n atom   ) )"), ["atom", ["atom"]]);
+assert_parse("(atom  other    atom)", ["atom", "other", "atom"]);
+assert_parse("( atom  other    atom)", ["atom", "other", "atom"]);
+assert_parse("( atom  other (atom))", ["atom", "other", ["atom"]]);
+assert_parse("( atom  other (    atom other))", ["atom", "other", ["atom", "other"]]);
+assert_parse("( atom  other    atom )", ["atom", "other", "atom"]);
+assert_parse("( atom  other (    atom other ))", ["atom", "other", ["atom", "other"]]);
+assert_parse("( atom  other (    atom other ) )", ["atom", "other", ["atom", "other"]]);
+assert_parse("( atom   (\n atom   ) )", ["atom", ["atom"]]);
 
-assert(parse(" atom"), "atom", 'p1');
-assert(parse(" \tatom"), "atom", 'p2');
-assert(parse(" (atom)"), ["atom"], 'p3');
-assert(parse(" (  atom ) "), ["atom"], 'p4');
-assert(parse(" ( a  b     c d)"), ["a", "b", "c", "d"], 'p5');
+assert_parse(" atom", "atom", 'p1');
+assert_parse(" \tatom", "atom", 'p2');
+assert_parse(" (atom)", ["atom"], 'p3');
+assert_parse(" (  atom ) ", ["atom"], 'p4');
+assert_parse(" ( a  b     c d)", ["a", "b", "c", "d"], 'p5');
 
 
 
 // add tabs and newlines
-assert(parse("(atom  \tother    atom)"), ["atom", "other", "atom"]);
-assert(parse("(atom  \nother    atom)"), ["atom", "other", "atom"]);
-assert(parse("(atom  \r\nother    atom)"), ["atom", "other", "atom"]);
+assert_parse("(atom  \tother    atom)", ["atom", "other", "atom"]);
+assert_parse("(atom  \nother    atom)", ["atom", "other", "atom"]);
+assert_parse("(atom  \r\nother    atom)", ["atom", "other", "atom"]);
 
 // TODO: general S-expr
 //assert(parse("((atom turkey) or)"), [["atom", "turkey"], "or"]);
 
 // quote
-assert(parse("(quote something)"), ["quote", "something"]);
-assert(parse(" ( quote something)"), ["quote", "something"]);
-assert(parse("`(something else)"), ["quote", ["something", "else"]]);
-assert(parse("`( something else)"), ["quote", [ "something", "else"]]);
+assert_parse("(quote something)", ["quote", "something"]);
+assert_parse(" ( quote something)", ["quote", "something"]);
+assert_parse("`(something else)", ["quote", ["something", "else"]]);
+assert_parse("`( something else)", ["quote", [ "something", "else"]]);
+
+// comments
+//assert_parse("atom;; comments", "atom");
+// assert(parse("turkey   ;; comments"), "turkey");
+// assert(parse("1492 ;; (more comments)"), "1492");
+// assert(parse("(+ x 3);; comments"), ["+", "x", "3"]);
+// assert(parse("(atom turkey or);; (more (comments))"), ["atom", "turkey", "or"]);
+

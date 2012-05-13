@@ -45,8 +45,9 @@ var assert_parse = function (input, expected, name) {
     if (!name) { name = input; }
     exports[name] = function(test) {
 	var obtained = parse(input);
+	console.log();
 	console.log(name + " --> " + pprint(obtained));
-	test.deepEqual(obtained, expected);
+	test.deepEqual(obtained, expected, "Failed:\n" + name);
 	test.done();
     };
 };

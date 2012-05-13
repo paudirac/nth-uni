@@ -23,7 +23,9 @@ var parse = wrapExceptions(PEG.buildParser(data).parse);
 // Nodeunit tests
 var assert_parse = function (input, expected, name) {
     if (!name) { name = input; }
+//    console.log("definint " + name);
     exports[name] = function(test) {
+//	console.log("executant " + name);
 	var obtained = parse(input);
 	test.deepEqual(obtained, expected);
 	test.done();
@@ -84,4 +86,9 @@ assert_parse("turkey   ;; comments", "turkey");
 assert_parse("1492 ;; (more comments)", "1492");
 assert_parse("(+ x 3);; comments", ["+", "x", "3"]);
 assert_parse("(atom turkey or);; (more (comments))", ["atom", "turkey", "or"]);
-
+assert_parse("(+ 1 (f x 3 y));; 2", ["+", "1", ["f", "x", "3","y"]]);
+assert_parse("(+ 1 (f x 3 y));; Lorem ipsum quod libet C#", ["+", "1", ["f", "x", "3","y"]]);
+//assert_parse("(+ 1 ;; ara canvio\n (f x 3 y));; i un altre comment", ["+", "1", ["f", "x", "3","y"]]);
+//assert_parse("(+ 1 (f x 3 y))\n;; Lorem \nipsum quod libet C#", ["+", "1", ["f", "x", "3","y"]]);
+//assert_parse("(+ (f 3 5) (g 2 3))", ["+", ["f", "3", "5"], ["g", "2", "3"]]);
+//assert_parse("(+ (f 3 5) (g 2 3)) ;; Lorem ipsum quod libet C#", ["+", ["f", "3", "5"], ["g", "2", "3"]]);

@@ -1,9 +1,6 @@
 start =
-    exp:expression whitespace* ";;"* expression { return exp; }
+    exp:expression whitespace* ";;"* .* { return exp; }
     / expression
-
-anychar =
-    [0-9a-zA-Z_?!+\-=@#$%^&*/.\(\)]
 
 validchar =
     [0-9a-zA-Z_?!+\-=@#$%^&*/.]
@@ -19,8 +16,11 @@ spaceatom =
 whitespace =
     " "
    /"\t"
-   /"\n"
-   /"\r\n"
+   / newline
+
+newline = 
+    "\n"
+    / "\r\n"
 
 spaceexpression =
     whitespace+ exp:expression { return exp; }

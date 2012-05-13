@@ -21,12 +21,31 @@ console.log(data);
 var parse = wrapExceptions(PEG.buildParser(data).parse);
 
 // Nodeunit tests
+var forEach = function(array, action) {
+    for(var i = 0; i < array.length; i++) { action(array[i], i); }
+};
+var pprint = function(list) {
+    str = "";
+    if (list instanceof Array) {
+	str += "(";
+	forEach(list, (function(item, i) {
+	    if (item.length) { 
+		if (i < list.length - 1) { str+= pprint(item) + " "; }
+		else { str += pprint(item); }
+	    }
+	    else { str += item.toString(); }
+	}));
+	str += ")";
+    }
+    else { str += list.toString(); }
+    return str;
+};
+
 var assert_parse = function (input, expected, name) {
     if (!name) { name = input; }
-//    console.log("definint " + name);
     exports[name] = function(test) {
-//	console.log("executant " + name);
 	var obtained = parse(input);
+	console.log(name + " --> " + pprint(obtained));
 	test.deepEqual(obtained, expected);
 	test.done();
     };

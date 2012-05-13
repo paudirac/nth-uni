@@ -58,13 +58,11 @@ assert_parse("( atom  other (    atom other ))", ["atom", "other", ["atom", "oth
 assert_parse("( atom  other (    atom other ) )", ["atom", "other", ["atom", "other"]]);
 assert_parse("( atom   (\n atom   ) )", ["atom", ["atom"]]);
 
-assert_parse(" atom", "atom", 'p1');
-assert_parse(" \tatom", "atom", 'p2');
-assert_parse(" (atom)", ["atom"], 'p3');
-assert_parse(" (  atom ) ", ["atom"], 'p4');
-assert_parse(" ( a  b     c d)", ["a", "b", "c", "d"], 'p5');
-
-
+assert_parse(" atom", "atom");//, 'p1');
+assert_parse(" \tatom", "atom");//, 'p2');
+assert_parse(" (atom)", ["atom"]); //, 'p3');
+assert_parse(" (  atom ) ", ["atom"]); //, 'p4');
+assert_parse(" ( a  b     c d)", ["a", "b", "c", "d"]); //, 'p5');
 
 // add tabs and newlines
 assert_parse("(atom  \tother    atom)", ["atom", "other", "atom"]);
@@ -81,9 +79,9 @@ assert_parse("`(something else)", ["quote", ["something", "else"]]);
 assert_parse("`( something else)", ["quote", [ "something", "else"]]);
 
 // comments
-//assert_parse("atom;; comments", "atom");
-// assert(parse("turkey   ;; comments"), "turkey");
-// assert(parse("1492 ;; (more comments)"), "1492");
-// assert(parse("(+ x 3);; comments"), ["+", "x", "3"]);
-// assert(parse("(atom turkey or);; (more (comments))"), ["atom", "turkey", "or"]);
+assert_parse("atom;; comments", "atom");
+assert_parse("turkey   ;; comments", "turkey");
+assert_parse("1492 ;; (more comments)", "1492");
+assert_parse("(+ x 3);; comments", ["+", "x", "3"]);
+assert_parse("(atom turkey or);; (more (comments))", ["atom", "turkey", "or"]);
 

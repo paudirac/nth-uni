@@ -1,5 +1,5 @@
 start =
-    exp:expression ";;"* anychar* { return exp; }
+    exp:expression whitespace* ";;"* expression { return exp; }
     / expression
 
 anychar =

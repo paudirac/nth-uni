@@ -52,50 +52,48 @@ assert_parse(" atom  ", "atom");
 assert_parse(" \tatom  \n", "atom");
 assert_parse("\natom\t", "atom");
 assert_parse("atom;; comments\n", "atom");
-//assert_parse("turkey   ;; comments", "turkey");
+assert_parse("turkey   ;; comments", "turkey");
 
+assert_parse("(+ x 3)", ["+", "x", "3"]);
+assert_parse("(atom)", ["atom"]);
+assert_parse("(atom turkey or)", ["atom", "turkey", "or"]);
+assert_parse("(+ 1 (f x 3 y))", ["+", "1", ["f", "x", "3","y"]]);
+assert_parse("((atom turkey) or)", [["atom", "turkey"], "or"]);
 
-// assert_parse("(+ x 3)", ["+", "x", "3"]);
-// assert_parse("(atom)", ["atom"]);
-// assert_parse("(atom turkey or)", ["atom", "turkey", "or"]);
-// assert_parse("(+ 1 (f x 3 y))", ["+", "1", ["f", "x", "3","y"]]);
+assert_parse("(atom  other    atom)", ["atom", "other", "atom"]);
+assert_parse("( atom  other    atom)", ["atom", "other", "atom"]);
+assert_parse("( atom  other (atom))", ["atom", "other", ["atom"]]);
+assert_parse("( atom  other (    atom other))", ["atom", "other", ["atom", "other"]]);
+assert_parse("( atom  other    atom )", ["atom", "other", "atom"]);
+assert_parse("( atom  other (    atom other ))", ["atom", "other", ["atom", "other"]]);
+assert_parse("( atom  other (    atom other ) )", ["atom", "other", ["atom", "other"]]);
+assert_parse("( atom   (\n atom   ) )", ["atom", ["atom"]]);
 
-// // add extra whitespace
-// assert_parse("(atom  other    atom)", ["atom", "other", "atom"]);
-// assert_parse("( atom  other    atom)", ["atom", "other", "atom"]);
-// assert_parse("( atom  other (atom))", ["atom", "other", ["atom"]]);
-// assert_parse("( atom  other (    atom other))", ["atom", "other", ["atom", "other"]]);
-// assert_parse("( atom  other    atom )", ["atom", "other", "atom"]);
-// assert_parse("( atom  other (    atom other ))", ["atom", "other", ["atom", "other"]]);
-// assert_parse("( atom  other (    atom other ) )", ["atom", "other", ["atom", "other"]]);
-// assert_parse("( atom   (\n atom   ) )", ["atom", ["atom"]]);
+assert_parse(" (atom)", ["atom"]);
+assert_parse(" (  atom ) ", ["atom"]);
+assert_parse(" ( a  b     c d)", ["a", "b", "c", "d"]);
 
+assert_parse("(atom  \tother    atom)", ["atom", "other", "atom"]);
+assert_parse("(atom  \nother    atom)", ["atom", "other", "atom"]);
+assert_parse("(atom  \r\nother    atom)", ["atom", "other", "atom"]);
 
-// assert_parse(" (atom)", ["atom"]); //, 'p3');
-// assert_parse(" (  atom ) ", ["atom"]); //, 'p4');
-// assert_parse(" ( a  b     c d)", ["a", "b", "c", "d"]); //, 'p5');
+assert_parse("1492 ;; (more comments)", "1492");
+assert_parse("(+ x 3);; comments", ["+", "x", "3"]);
+assert_parse("(atom turkey or);; (more (comments))", ["atom", "turkey", "or"]);
+assert_parse("(+ 1 (f x 3 y));; 2", ["+", "1", ["f", "x", "3","y"]]);
+assert_parse("(+ 1 (f x 3 y));; Lorem ipsum quod libet C#", ["+", "1", ["f", "x", "3","y"]]);
+assert_parse("(+ 1 ;; ara canvio\n (f x 3 y));; i un altre comment", ["+", "1", ["f", "x", "3","y"]]);
+assert_parse("(+ 1 (f x 3 y))\n;; Lorem ipsum quod libet C#", ["+", "1", ["f", "x", "3","y"]]);
+assert_parse("(+ (f 3 5) (g 2 3))", ["+", ["f", "3", "5"], ["g", "2", "3"]]);
+assert_parse("(+ (f 3 5) (g 2 3)) ;; Lorem ipsum quod libet C#", ["+", ["f", "3", "5"], ["g", "2", "3"]]);
+assert_parse("(+ ;; suma\n(f 3 5);; primer terme\n(g 2;;altre\n3))", ["+", ["f", "3", "5"], ["g", "2", "3"]]);
 
-// // add tabs and newlines
-// assert_parse("(atom  \tother    atom)", ["atom", "other", "atom"]);
-// assert_parse("(atom  \nother    atom)", ["atom", "other", "atom"]);
-// assert_parse("(atom  \r\nother    atom)", ["atom", "other", "atom"]);
-
-// // TODO: general S-expr
-// //assert(parse("((atom turkey) or)"), [["atom", "turkey"], "or"]);
-
-// // quote
-// assert_parse("(quote something)", ["quote", "something"]);
-// assert_parse(" ( quote something)", ["quote", "something"]);
-// assert_parse("`(something else)", ["quote", ["something", "else"]]);
-// assert_parse("`( something else)", ["quote", [ "something", "else"]]);
-
-// // comments
-// assert_parse("1492 ;; (more comments)", "1492");
-// assert_parse("(+ x 3);; comments", ["+", "x", "3"]);
-// assert_parse("(atom turkey or);; (more (comments))", ["atom", "turkey", "or"]);
-// assert_parse("(+ 1 (f x 3 y));; 2", ["+", "1", ["f", "x", "3","y"]]);
-// assert_parse("(+ 1 (f x 3 y));; Lorem ipsum quod libet C#", ["+", "1", ["f", "x", "3","y"]]);
-// assert_parse("(+ 1 ;; ara canvio\n (f x 3 y));; i un altre comment", ["+", "1", ["f", "x", "3","y"]]);
-// //assert_parse("(+ 1 (f x 3 y))\n;; Lorem \nipsum quod libet C#", ["+", "1", ["f", "x", "3","y"]]);
-// //assert_parse("(+ (f 3 5) (g 2 3))", ["+", ["f", "3", "5"], ["g", "2", "3"]]);
-// //assert_parse("(+ (f 3 5) (g 2 3)) ;; Lorem ipsum quod libet C#", ["+", ["f", "3", "5"], ["g", "2", "3"]]);
+// quote
+assert_parse("(quote something)", ["quote", "something"]);
+assert_parse(" ( quote something)", ["quote", "something"]);
+assert_parse("`atom", "atom");
+assert_parse("`(something else)", ["quote", ["something", "else"]]);
+assert_parse("`( something else)", ["quote", [ "something", "else"]]);
+assert_parse("`atom;;comment", "atom");
+assert_parse("`atom ;; comments\n;;mes comments", "atom");
+assert_parse("`(+ ;; suma\n(f 3 5);; primer terme\n(g 2;;altre\n3))", ["quote", ["+", ["f", "3", "5"], ["g", "2", "3"]]]);

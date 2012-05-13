@@ -1,8 +1,10 @@
 start =
-    expression
+    sexpression
 
-expression =
-    cleanatom
+sexpression =
+    cleanquote
+    / cleanatom
+    / cleanlist
 
 anychar = .
 
@@ -13,19 +15,29 @@ cleanatom =
     whitespace* a:atom comment whitespace* { return a; }
     / whitespace* a:atom whitespace* { return a; }
 
-
 comment =
     whitespace* ";;" comment:(!newline anychar)* { return comment; }
 
-cleanparenthisedexpression = .
-    
 atom =
-    chars:validchar+
-      { return chars.join(""); }
+    chars:validchar+ { return chars.join(""); }
 
-spaceatom =
-    whitespace* a:atom { return a; }
-    / atom
+quotechar = "`"
+quote =
+    quotechar a:cleanatom { return a; }
+    / quotechar list:cleanlist
+      { return ["quote", list]; }
+
+cleanquote =
+    whitespace* q:quote comment whitespace* { return q; }
+    / whitespace* q:quote whitespace* { return q; }
+
+list =
+    leftparen first:sexpression rest:sexpression* rightparen
+      { return [first].concat(rest); }
+
+cleanlist =
+    whitespace* l:list comment whitespace* { return l; }
+    / whitespace* l:list whitespace* { return l; }
 
 whitespace =
     " "
@@ -36,23 +48,9 @@ newline =
     "\n"
     / "\r\n"
 
-spaceexpression =
-    whitespace+ exp:expression { return exp; }
-
-leftparen =
+leftparen = 
     "(" whitespace*
 
 rightparen =
     whitespace* ")"
-
-parenthisedexpr =
-    leftparen first:atom rest:spaceexpression* rightparen
-      { return [first].concat(rest); }
-    / "`" leftparen first:atom rest:spaceexpression* rightparen
-      { return ["quote", [first].concat(rest)]; }
-
-spaceparenthisedexpr =
-    whitespace* p:parenthisedexpr whitespace*
-      { return p; }
-    / parenthisedexpr
 

@@ -23,7 +23,7 @@ atom =
     / symbol
 
 symbol =
-    / chars:validchar+ { return chars.join(""); }
+    chars:validchar+ { return chars.join(""); }
 
 number =
     integer

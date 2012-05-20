@@ -12,6 +12,7 @@ var fs = require('fs'); // for loading files
 
 // Read file contents
 var file_name = '/home/pau/js-uni/nth-uni-pl101-lesson2/scheem/scheem.peg';
+file_name = './scheem/scheem.peg';
 var data = fs.readFileSync(file_name, 'utf-8');
 
 // Show the PEG grammar file
@@ -41,8 +42,7 @@ var pprint = function(list) {
     return str;
 };
 
-var assert_parse = function (input, expected, name) {
-    return;
+var assert_parse = function (input, expected, name) {    
     if (!name) { name = input; }
     exports[name] = function(test) {
 	var obtained = parse(input);

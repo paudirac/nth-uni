@@ -22,6 +22,10 @@ var evalScheem = function (expr, env) {
     if (typeof expr === 'number') {
         return expr;
     }
+    // Strings are variable references
+    if (typeof expr === 'string') {
+	return env[expr];
+    }
     // Look at head of list for operation
     switch (expr[0]) {
     case '+':
@@ -38,6 +42,12 @@ var evalScheem = function (expr, env) {
 	       evalScheem(expr[2], env);
     case 'quote':
         return expr[1];
+    case 'define':
+	env[expr[1]] = evalScheem(expr[2], env);
+	return 0;
+    case 'set!':
+	env[expr[1]] = evalScheem(expr[2], env);
+	return 0;
     }
 };
 
@@ -119,6 +129,48 @@ suite('numbers', function() {
 	    evalScheem(['*',['/', 8, 4],['+', 1, 1]], {}),
 	    4
 	);
+    });
+});
+suite('variables', function() {
+    test('x', function() {
+    	assert.deepEqual(
+    	    evalScheem('x', {x:5}),
+    	    5
+    	);
+    });
+    test('(* y 3)', function() {
+	assert.deepEqual(
+	    evalScheem(['*', 'y', 3], {y : 2}),
+	    6
+	);
+    });
+    test('(/ z (+ x y))', function() {
+	assert.deepEqual(
+	    evalScheem(['/', 'z', ['+', 'x', 'y']], { x: 1, y: 2, z: 12}),
+	    4
+	);
+    });
+    var env = {x:2, y:3,z:10};
+    test('(define a 5)', function() {
+	assert.deepEqual(
+	    evalScheem(['define', 'a', 5], env),
+	    0
+	);
+	assert.deepEqual(env, {a:5,x:2,y:3,z:10});
+    });
+    test('(set! a 1)', function() {
+	assert.deepEqual(
+	    evalScheem(['set!', 'a', 1], env),
+	    0
+	);
+	assert.deepEqual(env, {a:1,x:2,y:3,z:10});
+    });
+    test('(set! x 7)', function() {
+	assert.deepEqual(
+	    evalScheem(['set!', 'x', 7], env),
+	    0
+	);
+	assert.deepEqual(env, {x:7,y:3,z:10,a:1});
     });
 });
 

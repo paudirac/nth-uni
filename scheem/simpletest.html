@@ -71,6 +71,10 @@ var evalScheem = function (expr, env) {
 	var slist2 = evalScheem(expr[1], env);
 	slist2.shift();
 	return slist2;
+    case 'if':
+	var ebool = evalScheem(expr[1], env);
+	if (ebool === '#t') { return evalScheem(expr[2], env); }
+	else { return evalScheem(expr[3], env); }
     }
 };
 
@@ -285,6 +289,38 @@ suite('=,<,cons,car,cdr', function() {
     	    evalScheem(['cdr', ['quote', [[1, 2], 3, 4]]], {}),
     	    [3, 4]
     	);
+    });
+});
+suite('if', function() {
+    test('(if (= 1 1) 2 3)', function() {
+	assert.deepEqual(
+	    evalScheem(['if', ['=', 1, 1], 2, 3], {}),
+	    2
+	);
+    });
+    test('(if (= 1 0) 2 3)', function() {
+	assert.deepEqual(
+	    evalScheem(['if', ['=', 1, 0], 2, 3], {}),
+	    3
+	);
+    });
+    test('(if (= 1 1) 2 error)', function() {
+	assert.deepEqual(
+	    evalScheem(['if', ['=', 1, 1], 2, 'error'], {}),
+	    2
+	);
+    });
+    test('(if (= 1 0) error 3)', function() {
+	assert.deepEqual(
+	    evalScheem(['if', ['=', 1, 0], 'error', 3], {}),
+	    3
+	);
+    });
+    test('(if (= 1 1) (if (= 2 3) 10 11) 12)', function() {
+	assert.deepEqual(
+	    evalScheem(['if', ['=', 1, 1], ['if', ['=', 2, 3], 10, 11], 12], {}),
+	    11
+	);
     });
 });
 

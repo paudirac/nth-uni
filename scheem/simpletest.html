@@ -56,6 +56,21 @@ var evalScheem = function (expr, env) {
 	return res;
     case 'quote': // quote means: not evaluate
 	return expr[1];
+    case '=':
+	var eq = evalScheem(expr[1], env) === evalScheem(expr[2], env);
+	return eq ? '#t' : '#f';
+    case '<':
+	var lt = evalScheem(expr[1], env) < evalScheem(expr[2], env);
+	return lt ? '#t' : '#f';
+    case 'cons':
+	return [evalScheem(expr[1], env)].concat(evalScheem(expr[2], env));
+    case 'car':
+	var slist = evalScheem(expr[1], env);
+	return slist[0];
+    case 'cdr':
+	var slist2 = evalScheem(expr[1], env);
+	slist2.shift();
+	return slist2;
     }
 };
 
@@ -214,6 +229,62 @@ suite('quote', function() {
 	    evalScheem(['quote', ['quote', ['+', 2, 3]]], {}),
 	    ['quote', ['+', 2, 3]]
 	);
+    });
+});
+suite('=,<,cons,car,cdr', function() {
+    test('(= (+ 2 3) 5)', function() {
+	assert.deepEqual(
+	    evalScheem(['=', ['+', 2, 3], 5], {}),
+	    '#t'
+	);
+    });
+    test('(= 90 (+ 2 3))', function() {
+	assert.deepEqual(
+	    evalScheem(['=', 90, ['+', 2, 3]], {}),
+	    '#f'
+	);
+    });
+    test('(< 2 2)', function() {
+	assert.deepEqual(
+	    evalScheem(['<', 2, 2], {}),
+	    '#f'
+	);
+    });
+    test('< 2 3)', function() {
+	assert.deepEqual(
+	    evalScheem(['<', 2, 3],{}),
+	    '#t'
+	);
+    });
+    test('(< (+ 1 1) (+ 2 3))', function() {
+	assert.deepEqual(
+	    evalScheem(['<', ['+', 1, 1], ['+', 2, 3]], {}),
+	    '#t'
+	);
+    });
+    test("(cons 1 '(2 3))", function() {
+	assert.deepEqual(
+	    evalScheem(['cons', 1, ['quote', [2, 3]]],{}),
+	    [1, 2, 3]
+	);
+    });
+    test("(cons '(1 2) '(3 4))", function() {
+    	assert.deepEqual(
+    	    evalScheem(['cons', ['quote', [1, 2]], ['quote', [3, 4]]], {}),
+    	    [[1, 2], 3, 4]
+    	);
+    });
+    test("(car '((1 2) 3 4))", function() {
+    	assert.deepEqual(
+    	    evalScheem(['car', ['quote', [[1, 2], 3, 4]]], {}),
+    	    [1, 2]
+    	);
+    });
+    test("cdr '((1 2) 3 4)", function() {
+    	assert.deepEqual(
+    	    evalScheem(['cdr', ['quote', [[1, 2], 3, 4]]], {}),
+    	    [3, 4]
+    	);
     });
 });
 

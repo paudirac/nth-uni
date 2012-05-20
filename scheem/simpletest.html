@@ -24,7 +24,10 @@ var evalScheem = function (expr, env) {
     }
     // Strings are variable references
     if (typeof expr === 'string') {
-	return env[expr];
+	if (!env[expr]) { 
+	    throw new Error(expr + " not found in environment"); 
+	}
+	else { return env[expr]; }
     }
     // Look at head of list for operation
     switch (expr[0]) {
@@ -111,6 +114,11 @@ suite('add', function() {
             evalScheem(['+', 3, ['+', 2, 2]], {}),
             7
         );
+    });
+    test('a dog and a cat', function() {
+	assert.throws(function() {
+	    evalScheem(['+', 'dog', 'cat'], {});
+	});
     });
     test('two plus tow', function() {
 	assert.deepEqual(

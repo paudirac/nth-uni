@@ -54,6 +54,8 @@ var evalScheem = function (expr, env) {
 	    res = evalScheem(expr[i], env);
 	}
 	return res;
+    case 'quote': // quote means: not evaluate
+	return expr[1];
     }
 };
 
@@ -197,6 +199,20 @@ suite('begin', function() {
 	assert.deepEqual(
 	    evalScheem(['begin', ['set!', 'x', 5], ['set!', 'x', ['+', 'y', 'x']], 'x'], env),
 	    7
+	);
+    });
+});
+suite('quote', function() {
+    test('(quote (+ 2 3))', function() {
+	assert.deepEqual(
+	    evalScheem(['quote', ['+', 2, 3]], {}),
+	    ['+', 2, 3]
+	);
+    });
+    test('(quote (quote (+ 2 3)))', function() {
+	assert.deepEqual(
+	    evalScheem(['quote', ['quote', ['+', 2, 3]]], {}),
+	    ['quote', ['+', 2, 3]]
 	);
     });
 });

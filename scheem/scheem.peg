@@ -19,7 +19,21 @@ comment =
     whitespace* ";;" comment:(!newline anychar)* { return comment; }
 
 atom =
-    chars:validchar+ { return chars.join(""); }
+    number
+    / symbol
+
+symbol =
+    / chars:validchar+ { return chars.join(""); }
+
+number =
+    integer
+//    / decimal
+
+integer
+    = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
+
+//decimal "decimal"
+  //  = digits:[0-9]+\.[0-9]+ { return parseFloat(digits.join(""), 10); }
 
 quotechar = "`"
 quote =

@@ -122,3 +122,6 @@ assert_parse("`(+ ;; suma\n(f 3 5);; primer terme\n(g 2;;altre\n3))", ["quote", 
 console.log(parse("3"));
 console.log(typeof parse("3"));
 console.log(parse("3") + 2);
+
+assert_parse("42", 42);
+assert_parse("42.05", 42.05);

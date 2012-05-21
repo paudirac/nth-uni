@@ -26,14 +26,14 @@ symbol =
     chars:validchar+ { return chars.join(""); }
 
 number =
-    integer
-//    / decimal
+    decimal
+    / integer
 
 integer
     = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
 
-//decimal "decimal"
-  //  = digits:[0-9]+\.[0-9]+ { return parseFloat(digits.join(""), 10); }
+decimal
+    = i:[0-9]*d:[.0-9]+ { return parseFloat(i.join("") + d.join("")); }
 
 quotechar = "`"
 quote =

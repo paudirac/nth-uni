@@ -119,6 +119,9 @@ assert_parse("`atom;;comment", "atom");
 assert_parse("`atom ;; comments\n;;mes comments", "atom");
 assert_parse("`(+ ;; suma\n(f 3 5);; primer terme\n(g 2;;altre\n3))", ["quote", ["+", ["f", 3, 5], ["g", 2, 3]]]);
 
+// <
+assert_parse("(< 2 3)", ["<", 2, 3]);
+
 console.log(parse("3"));
 console.log(typeof parse("3"));
 console.log(parse("3") + 2);

@@ -9,7 +9,7 @@ sexpression =
 anychar = .
 
 validchar =
-    [0-9a-zA-Z_?!+\-=@#$%^&*/.]
+    [0-9a-zA-Z_?!+\-=@#$%^&*/.<]
 
 cleanatom =
     whitespace* a:atom comment whitespace* { return a; }

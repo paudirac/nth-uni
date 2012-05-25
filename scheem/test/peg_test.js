@@ -11,8 +11,7 @@ var assert = require('assert');
 var fs = require('fs'); // for loading files
 
 // Read file contents
-var file_name = '/home/pau/js-uni/nth-uni-pl101-lesson2/scheem/scheem.peg';
-file_name = './scheem/scheem.peg';
+var file_name = '../scheem.peg';
 var data = fs.readFileSync(file_name, 'utf-8');
 
 // Show the PEG grammar file
